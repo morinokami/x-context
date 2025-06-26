@@ -1,0 +1,25 @@
+{
+	"name": "x-context",
+	"version": "0.0.1",
+	"description": "TODO:",
+	"keywords": [],
+	"author": "Shinya Fujino <shf0811@gmail.com> (https://github.com/morinokami)",
+	"license": "MIT",
+	"packageManager": "pnpm@10.12.3",
+	"type": "module",
+	"bin": {
+		"x-context": "./dist/index.js"
+	},
+	"files": [
+		"dist"
+	],
+	"scripts": {
+		"build": "tsdown"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.0.5",
+		"pkg-pr-new": "0.0.53",
+		"tsdown": "0.12.9",
+		"typescript": "5.8.3"
+	}
+}
