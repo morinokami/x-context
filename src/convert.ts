@@ -1,4 +1,7 @@
-import type { SupportedFormat, SupportedProvider } from "./constants";
+import type { supportedFormats, supportedProviders } from "./constants";
+
+type SupportedFormat = (typeof supportedFormats)[number];
+type SupportedProvider = (typeof supportedProviders)[number];
 
 export function convertConfig(
 	content: string,
