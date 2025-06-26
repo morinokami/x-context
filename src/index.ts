@@ -11,6 +11,7 @@ import {
 	supportedProviders,
 } from "./constants";
 import { convertConfig } from "./convert";
+import { validateEnvironmentVariables } from "./utils";
 
 const CliOptionsSchema = z.object({
 	from: z.enum(supportedFormats, {
@@ -57,6 +58,9 @@ program
 			}
 
 			const { from, to, provider } = validationResult.data;
+
+			validateEnvironmentVariables(provider);
+
 			const filePath = resolve(file);
 
 			try {
