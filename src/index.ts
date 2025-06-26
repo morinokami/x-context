@@ -1,12 +1,15 @@
 #!/usr/bin/env node
 
 import { readFileSync, writeFileSync } from "node:fs";
-import { dirname, join, resolve } from "node:path";
-import { fileURLToPath } from "node:url";
+import { resolve } from "node:path";
 import { Command } from "commander";
 import * as z from "zod/v4";
 
-import { supportedFormats, supportedProviders } from "./constants";
+import {
+	packageVersion,
+	supportedFormats,
+	supportedProviders,
+} from "./constants";
 import { convertConfig } from "./convert";
 
 const CliOptionsSchema = z.object({
@@ -21,11 +24,6 @@ const CliOptionsSchema = z.object({
 	}),
 });
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-const packageJsonPath = join(__dirname, "../package.json");
-const packageJson = JSON.parse(readFileSync(packageJsonPath, "utf-8"));
-
 const program = new Command();
 
 program
@@ -33,7 +31,7 @@ program
 	.description(
 		"Convert AI coding tool configuration files between different formats",
 	)
-	.version(packageJson.version)
+	.version(packageVersion)
 	.requiredOption(
 		"--from <format>",
 		`source format (${supportedFormats.join(", ")})`,
