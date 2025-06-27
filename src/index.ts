@@ -89,6 +89,8 @@ program
 				for (const file of converted) {
 					console.log(`   📁 ${file.path}`);
 				}
+
+				// TODO: print the token usage
 			} catch (error) {
 				spinner.fail(
 					`Conversion failed: ${error instanceof Error ? error.message : String(error)}`,

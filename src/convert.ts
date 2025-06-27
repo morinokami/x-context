@@ -14,7 +14,6 @@ export async function convertConfig(
 	provider: SupportedProvider,
 	spinner: Ora,
 ) {
-	// TODO: convert html to markdown if needed
 	spinner.text = `Fetching ${from} documentation...`;
 	const sourceConfigDocuments = await Promise.all(
 		configDocuments[from].map((url) => fetch(url).then((res) => res.text())),

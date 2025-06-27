@@ -25,8 +25,8 @@ export const configDocuments = {
 	copilot: [
 		"https://raw.githubusercontent.com/github/docs/refs/heads/main/content/copilot/customizing-copilot/adding-repository-custom-instructions-for-github-copilot.md",
 	],
-	"claude-code": ["https://docs.anthropic.com/en/docs/claude-code/memory"],
-	cursor: ["https://docs.cursor.com/context/rules"],
+	"claude-code": ["https://docs.anthropic.com/en/docs/claude-code/memory.md"],
+	cursor: ["https://docs.cursor.com/context/rules.md"],
 	"gemini-cli": [
 		"https://raw.githubusercontent.com/google-gemini/gemini-cli/refs/heads/main/docs/cli/configuration.md",
 	],
