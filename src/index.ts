@@ -83,6 +83,7 @@ program
 					spinner,
 				);
 
+				// TODO: check if the converted files can be saved to file.path
 				spinner.start("Writing converted files...");
 				for (const file of converted) {
 					writeFileSync(file.path, file.content);
