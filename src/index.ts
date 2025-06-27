@@ -80,17 +80,19 @@ program
 
 				// TODO: check if the converted files can be saved to file.path
 				spinner.start("Writing converted files...");
-				for (const file of converted) {
+				for (const file of converted.files) {
 					writeFileSync(file.path, file.content);
 				}
 				spinner.succeed("Files written successfully");
 
+				// TODO: display the official names of the tools
 				console.log(`\n✅ Converted ${from} config to ${to} format:`);
-				for (const file of converted) {
+				for (const file of converted.files) {
 					console.log(`   📁 ${file.path}`);
 				}
 
-				// TODO: print the token usage
+				console.log(`\n💬 Total tokens: ${converted.usage.totalTokens}`);
+				// TODO: display the model and provider used
 			} catch (error) {
 				spinner.fail(
 					`Conversion failed: ${error instanceof Error ? error.message : String(error)}`,

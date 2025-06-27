@@ -25,6 +25,7 @@ export async function convertConfig(
 	);
 	spinner.succeed("Configuration documentation fetched successfully");
 
+	// TODO: display the official name of the provider
 	spinner.start(`Generating ${to} configuration using ${provider}...`);
 	const generatedConfig = await generateConfig(
 		content,
@@ -81,10 +82,10 @@ ${content}
 	// TODO: make this configurable
 	const model =
 		provider === "openai"
-			? openai("gpt-4.1")
-			: anthropic("claude-4-opus-20250514");
+			? openai("gpt-4o")
+			: anthropic("claude-4-sonnet-20250514");
 
-	const { object } = await generateObject({
+	const { object, usage } = await generateObject({
 		model,
 		schema: z.object({
 			files: z.array(
@@ -97,5 +98,5 @@ ${content}
 		prompt,
 	});
 
-	return object.files;
+	return { files: object.files, usage };
 }
