@@ -7,8 +7,11 @@ import ora from "ora";
 import * as z from "zod/v4";
 
 import {
+	DEFAULT_MODELS,
+	PROVIDER_NAME,
 	packageVersion,
 	SUPPORTED_FORMATS,
+	SUPPORTED_MODELS,
 	SUPPORTED_PROVIDERS,
 	TOOL_NAME,
 } from "./constants";
@@ -24,6 +27,12 @@ const CliOptionsSchema = z.object({
 	provider: z.enum(SUPPORTED_PROVIDERS, {
 		message: `--provider must be one of: ${SUPPORTED_PROVIDERS.join(", ")}`,
 	}),
+	model: z
+		.enum(Object.values(SUPPORTED_MODELS).flat(), {
+			// TODO: too many models, just show a brief list of models
+			message: `--model must be one of: ${Object.values(SUPPORTED_MODELS).flat().join(", ")}`,
+		})
+		.optional(),
 });
 
 const spinner = ora();
@@ -47,11 +56,16 @@ program
 		"--provider <provider>",
 		`AI provider to use for generation (${SUPPORTED_PROVIDERS.join(", ")})`,
 	)
+	.option(
+		"--model <model>",
+		// TODO: too many models, just show a brief list of models
+		`AI model to use for generation (${Object.values(SUPPORTED_MODELS).flat().join(", ")})`,
+	)
 	.argument("<file>", "configuration file to convert")
 	.action(
 		async (
 			file: string,
-			options: { from: string; to: string; provider: string },
+			options: { from: string; to: string; provider: string; model: string },
 		) => {
 			const validationResult = CliOptionsSchema.safeParse(options);
 			if (!validationResult.success) {
@@ -62,7 +76,8 @@ program
 				process.exit(1);
 			}
 
-			const { from, to, provider } = validationResult.data;
+			const { from, to, provider, model } = validationResult.data;
+			const modelId = model ?? DEFAULT_MODELS[provider];
 			const filePath = resolve(file);
 
 			try {
@@ -76,6 +91,7 @@ program
 					from,
 					to,
 					provider,
+					modelId,
 					spinner,
 				);
 
@@ -87,14 +103,13 @@ program
 				spinner.succeed("Files written successfully");
 
 				console.log(
-					`\n✅ Converted ${TOOL_NAME[from]} config to ${TOOL_NAME[to]} format:`,
+					`\n💡 Converted ${TOOL_NAME[from]} config to ${TOOL_NAME[to]} format:`,
 				);
 				for (const file of converted.files) {
 					console.log(`   📁 ${file.path}`);
 				}
-
-				console.log(`\n💬 Total tokens: ${converted.usage.totalTokens}`);
-				// TODO: display the model and provider used
+				console.log(`💬 Total tokens: ${converted.usage.totalTokens}`);
+				console.log(`🤖 Model: ${PROVIDER_NAME[provider]} (${modelId})`);
 			} catch (error) {
 				spinner.fail(
 					`Conversion failed: ${error instanceof Error ? error.message : String(error)}`,

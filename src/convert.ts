@@ -1,9 +1,10 @@
 import { anthropic } from "@ai-sdk/anthropic";
+import type { AnthropicMessagesModelId } from "@ai-sdk/anthropic/internal";
 import { openai } from "@ai-sdk/openai";
+import type { OpenAIChatModelId } from "@ai-sdk/openai/internal";
 import { generateObject } from "ai";
 import type { Ora } from "ora";
 import { z } from "zod";
-
 import type { SupportedFormat, SupportedProvider } from "./constants";
 import { DOC_URL, PROVIDER_NAME, TOOL_NAME } from "./constants";
 
@@ -12,6 +13,7 @@ export async function convertConfig(
 	from: SupportedFormat,
 	to: SupportedFormat,
 	provider: SupportedProvider,
+	modelId: OpenAIChatModelId | AnthropicMessagesModelId,
 	spinner: Ora,
 ) {
 	spinner.text = `Fetching ${from} documentation...`;
@@ -26,13 +28,14 @@ export async function convertConfig(
 	spinner.succeed("Configuration documentation fetched successfully");
 
 	spinner.start(
-		`Generating ${TOOL_NAME[to]} configuration using ${PROVIDER_NAME[provider]}...`,
+		`Generating ${TOOL_NAME[to]} configuration using ${PROVIDER_NAME[provider]} ${modelId}...`,
 	);
 	const generatedConfig = await generateConfig(
 		content,
 		sourceConfigDocuments,
 		targetConfigDocuments,
 		provider,
+		modelId,
 	);
 	spinner.succeed("Configuration converted successfully");
 
@@ -44,6 +47,7 @@ async function generateConfig(
 	sourceConfigDocuments: string[],
 	targetConfigDocuments: string[],
 	provider: SupportedProvider,
+	modelId: OpenAIChatModelId | AnthropicMessagesModelId,
 ) {
 	const prompt = `
 You are a configuration file conversion assistant. Your task is to convert a source configuration file to a target configuration format.
@@ -80,11 +84,7 @@ ${content}
 </source_config>
 `;
 
-	// TODO: make this configurable
-	const model =
-		provider === "openai"
-			? openai("gpt-4o")
-			: anthropic("claude-4-sonnet-20250514");
+	const model = provider === "openai" ? openai(modelId) : anthropic(modelId);
 
 	const { object, usage } = await generateObject({
 		model,

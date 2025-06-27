@@ -16,6 +16,7 @@ This is x-context, a CLI tool that converts AI coding tool configuration files b
 - **Format**: `pnpm biome format --write` - Auto-fixes formatting issues
 - **Test CLI**: `npx tsx src/index.ts --from=claude-code --to=cursor --provider=openai ./CLAUDE.md`
 - **Test Built CLI**: `node dist/index.js --from=claude-code --to=cursor --provider=openai ./CLAUDE.md`
+- **Test with Model**: `npx tsx src/index.ts --from=claude-code --to=cursor --provider=anthropic --model=claude-4-sonnet-20250514 ./CLAUDE.md`
 
 ## Architecture
 
@@ -43,8 +44,8 @@ This is x-context, a CLI tool that converts AI coding tool configuration files b
 ## Key Implementation Details
 
 ### CLI Flow
-1. **Validation**: Zod schemas validate CLI arguments (--from, --to, --provider)
-2. **Environment Check**: Validates required API keys (OPENAI_API_KEY/ANTHROPIC_API_KEY)
+1. **Validation**: Zod schemas validate CLI arguments (--from, --to, --provider, optional --model)
+2. **Model Selection**: Uses default models (o4-mini for OpenAI, claude-4-sonnet-20250514 for Anthropic) if --model not specified
 3. **Documentation Fetching**: Downloads format documentation with progress feedback
 4. **AI Conversion**: Sends comprehensive prompt to AI with structured output schema
 5. **File Output**: Writes converted files with paths determined by AI response
@@ -53,7 +54,7 @@ This is x-context, a CLI tool that converts AI coding tool configuration files b
 - **Documentation URLs**: Live documentation fetched for accurate, up-to-date conversions
 - **Structured Output**: AI returns `{files: [{path: string, content: string}]}` validated by Zod
 - **Single File Preference**: Prompt instructs AI to avoid file splitting unless necessary
-- **Model Routing**: Auto-selects appropriate models (gpt-4o for OpenAI, claude-4-sonnet-20250514 for Anthropic)
+- **Model Routing**: Defaults to o4-mini for OpenAI and claude-4-sonnet-20250514 for Anthropic when --model not specified
 - **Error Handling**: Comprehensive error handling with user-friendly messages and spinner feedback
 
 ### Environment Variables
@@ -63,15 +64,7 @@ This is x-context, a CLI tool that converts AI coding tool configuration files b
 ## Configuration Notes
 
 - Uses strict TypeScript configuration with ESNext target
-- Biome enforces unused imports/variables as errors
+- Biome enforces unused imports/variables as errors, uses tab indentation and double quotes
 - ESM-only architecture with node: protocol imports  
 - Version auto-synced from package.json in CLI interface
 - CLI published as `x-context` binary pointing to `dist/index.js`
-
-## Implementation Status
-
-- ✅ **CLI Interface**: Complete with Commander.js, Zod validation, and ora progress feedback
-- ✅ **AI Integration**: Full OpenAI and Anthropic support via Vercel AI SDK with `generateObject()`
-- ✅ **Documentation System**: Automatic fetching of format-specific documentation
-- ✅ **File I/O**: Reading source configs and writing multiple output files with AI-determined paths
-- ❌ **Model Configuration**: Currently hardcoded models (gpt-4o, claude-4-sonnet-20250514)
