@@ -12,7 +12,6 @@ import {
 	supportedProviders,
 } from "./constants";
 import { convertConfig } from "./convert";
-import { validateEnvironmentVariables } from "./utils";
 
 const CliOptionsSchema = z.object({
 	from: z.enum(supportedFormats, {
@@ -26,6 +25,7 @@ const CliOptionsSchema = z.object({
 	}),
 });
 
+const spinner = ora();
 const program = new Command();
 
 program
@@ -62,12 +62,7 @@ program
 			}
 
 			const { from, to, provider } = validationResult.data;
-
-			validateEnvironmentVariables(provider);
-
 			const filePath = resolve(file);
-
-			const spinner = ora();
 
 			try {
 				spinner.start("Reading source configuration file...");

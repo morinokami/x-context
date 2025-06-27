@@ -1,6 +1,6 @@
-// import Anthropic from "@anthropic-ai/sdk";
-import OpenAI from "openai";
-import { zodTextFormat } from "openai/helpers/zod";
+import { anthropic } from "@ai-sdk/anthropic";
+import { openai } from "@ai-sdk/openai";
+import { generateObject } from "ai";
 import type { Ora } from "ora";
 import { z } from "zod";
 
@@ -79,34 +79,24 @@ ${content}
 </source_config>
 `;
 
-	if (provider === "openai") {
-		const openai = new OpenAI({
-			apiKey: process.env.OPENAI_API_KEY,
-		});
-		const GeneratedConfigSchema = z.object({
+	// TODO: make this configurable
+	const model =
+		provider === "openai"
+			? openai("gpt-4.1")
+			: anthropic("claude-4-opus-20250514");
+
+	const { object } = await generateObject({
+		model,
+		schema: z.object({
 			files: z.array(
 				z.object({
 					path: z.string(),
 					content: z.string(),
 				}),
 			),
-		});
+		}),
+		prompt,
+	});
 
-		const response = await openai.responses.parse({
-			model: "gpt-4.1", // TODO: make this configurable
-			input: prompt,
-			text: {
-				format: zodTextFormat(GeneratedConfigSchema, "GeneratedConfig"),
-			},
-		});
-
-		if (!response.output_parsed) {
-			throw new Error("Failed to generate config");
-		}
-
-		return response.output_parsed.files;
-	}
-
-	// TODO: implement anthropic
-	throw new Error("Not implemented");
+	return object.files;
 }

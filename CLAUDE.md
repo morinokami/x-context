@@ -4,10 +4,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Overview
 
-This is x-context, a CLI tool that converts AI coding tool configuration files between different formats using AI-powered conversion. The tool helps users migrate configurations between AI coding assistants (e.g., from Claude Code to Cursor) by leveraging OpenAI's structured output capabilities.
+This is x-context, a CLI tool that converts AI coding tool configuration files between different formats using AI-powered conversion. The tool helps users migrate configurations between AI coding assistants (e.g., from Claude Code to Cursor) by leveraging the Vercel AI SDK's structured output capabilities.
 
 **Supported Formats**: copilot, claude-code, cursor, gemini-cli
-**Supported Providers**: openai, anthropic (anthropic implementation pending)
+**Supported Providers**: openai, anthropic
 
 ## Development Commands
 
@@ -27,10 +27,11 @@ This is x-context, a CLI tool that converts AI coding tool configuration files b
 - **Progress Feedback**: Ora spinners for detailed user feedback
 
 ### AI Integration Architecture
-- **OpenAI Integration**: Uses `responses.parse()` with Zod schemas for structured JSON output
+- **Vercel AI SDK**: Uses `generateObject()` with unified interface for multiple providers
+- **Multi-Provider Support**: Seamless switching between OpenAI and Anthropic with same API
 - **Documentation System**: Automatically fetches format-specific documentation from live URLs
 - **Prompt Engineering**: Comprehensive system prompt that includes source/target docs and conversion requirements
-- **Environment Validation**: Checks for required API keys before processing
+- **Structured Output**: Zod schemas ensure type-safe AI responses
 
 ## Project Structure
 
@@ -53,11 +54,12 @@ This is x-context, a CLI tool that converts AI coding tool configuration files b
 - **Documentation URLs**: Live documentation fetched for accurate, up-to-date conversions
 - **Structured Output**: AI returns `{files: [{path: string, content: string}]}` validated by Zod
 - **Single File Preference**: Prompt instructs AI to avoid file splitting unless necessary
+- **Model Routing**: Auto-selects appropriate models (GPT-4.1 for OpenAI, Claude 4 Opus for Anthropic)
 - **Error Handling**: Comprehensive error handling with user-friendly messages and spinner feedback
 
 ### Environment Variables
 - `OPENAI_API_KEY` - Required when using `--provider=openai`
-- `ANTHROPIC_API_KEY` - Required when using `--provider=anthropic` (not yet implemented)
+- `ANTHROPIC_API_KEY` - Required when using `--provider=anthropic`
 
 ## Configuration Notes
 
@@ -70,9 +72,8 @@ This is x-context, a CLI tool that converts AI coding tool configuration files b
 ## Implementation Status
 
 - ✅ **CLI Interface**: Complete with Commander.js, Zod validation, and ora progress feedback
-- ✅ **OpenAI Integration**: Structured output with `responses.parse()` and comprehensive prompts
+- ✅ **AI Integration**: Full OpenAI and Anthropic support via Vercel AI SDK with `generateObject()`
 - ✅ **Documentation System**: Automatic fetching of format-specific documentation
 - ✅ **File I/O**: Reading source configs and writing multiple output files with AI-determined paths
 - ✅ **Environment Validation**: API key checking before processing
-- ❌ **Anthropic Integration**: SDK included but generateConfig() not implemented
-- ❌ **Model Configuration**: Currently hardcoded to GPT-4.1
+- ❌ **Model Configuration**: Currently hardcoded models (GPT-4.1, Claude 4 Opus)
