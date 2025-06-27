@@ -3,6 +3,7 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { Command } from "commander";
+import ora from "ora";
 import * as z from "zod/v4";
 
 import {
@@ -66,21 +67,35 @@ program
 
 			const filePath = resolve(file);
 
-			try {
-				const content = readFileSync(filePath, "utf-8");
-				const converted = await convertConfig(content, from, to, provider);
+			const spinner = ora();
 
+			try {
+				spinner.start("Reading source configuration file...");
+				const content = readFileSync(filePath, "utf-8");
+				spinner.succeed("Source configuration file read successfully");
+
+				spinner.start("Fetching configuration documentation...");
+				const converted = await convertConfig(
+					content,
+					from,
+					to,
+					provider,
+					spinner,
+				);
+
+				spinner.start("Writing converted files...");
 				for (const file of converted) {
 					writeFileSync(file.path, file.content);
 				}
+				spinner.succeed("Files written successfully");
 
-				console.log(`Converted ${from} config to ${to} format`);
+				console.log(`\n✅ Converted ${from} config to ${to} format:`);
 				for (const file of converted) {
-					console.log(`- ${file.path}`);
+					console.log(`   📁 ${file.path}`);
 				}
 			} catch (error) {
-				console.error(
-					`Error: ${error instanceof Error ? error.message : String(error)}`,
+				spinner.fail(
+					`Conversion failed: ${error instanceof Error ? error.message : String(error)}`,
 				);
 				process.exit(1);
 			}

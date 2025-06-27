@@ -1,6 +1,7 @@
 // import Anthropic from "@anthropic-ai/sdk";
 import OpenAI from "openai";
 import { zodTextFormat } from "openai/helpers/zod";
+import type { Ora } from "ora";
 import { z } from "zod";
 
 import type { SupportedFormat, SupportedProvider } from "./constants";
@@ -11,21 +12,28 @@ export async function convertConfig(
 	from: SupportedFormat,
 	to: SupportedFormat,
 	provider: SupportedProvider,
+	spinner: Ora,
 ) {
 	// TODO: convert html to markdown if needed
+	spinner.text = `Fetching ${from} documentation...`;
 	const sourceConfigDocuments = await Promise.all(
 		configDocuments[from].map((url) => fetch(url).then((res) => res.text())),
 	);
+
+	spinner.text = `Fetching ${to} documentation...`;
 	const targetConfigDocuments = await Promise.all(
 		configDocuments[to].map((url) => fetch(url).then((res) => res.text())),
 	);
+	spinner.succeed("Configuration documentation fetched successfully");
 
+	spinner.start(`Generating ${to} configuration using ${provider}...`);
 	const generatedConfig = await generateConfig(
 		content,
 		sourceConfigDocuments,
 		targetConfigDocuments,
 		provider,
 	);
+	spinner.succeed("Configuration converted successfully");
 
 	return generatedConfig;
 }
