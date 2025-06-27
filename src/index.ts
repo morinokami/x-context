@@ -8,20 +8,21 @@ import * as z from "zod/v4";
 
 import {
 	packageVersion,
-	supportedFormats,
-	supportedProviders,
+	SUPPORTED_FORMATS,
+	SUPPORTED_PROVIDERS,
+	TOOL_NAME,
 } from "./constants";
 import { convertConfig } from "./convert";
 
 const CliOptionsSchema = z.object({
-	from: z.enum(supportedFormats, {
-		message: `--from must be one of: ${supportedFormats.join(", ")}`,
+	from: z.enum(SUPPORTED_FORMATS, {
+		message: `--from must be one of: ${SUPPORTED_FORMATS.join(", ")}`,
 	}),
-	to: z.enum(supportedFormats, {
-		message: `--to must be one of: ${supportedFormats.join(", ")}`,
+	to: z.enum(SUPPORTED_FORMATS, {
+		message: `--to must be one of: ${SUPPORTED_FORMATS.join(", ")}`,
 	}),
-	provider: z.enum(supportedProviders, {
-		message: `--provider must be one of: ${supportedProviders.join(", ")}`,
+	provider: z.enum(SUPPORTED_PROVIDERS, {
+		message: `--provider must be one of: ${SUPPORTED_PROVIDERS.join(", ")}`,
 	}),
 });
 
@@ -36,15 +37,15 @@ program
 	.version(packageVersion)
 	.requiredOption(
 		"--from <format>",
-		`source format (${supportedFormats.join(", ")})`,
+		`source format (${SUPPORTED_FORMATS.join(", ")})`,
 	)
 	.requiredOption(
 		"--to <format>",
-		`target format (${supportedFormats.join(", ")})`,
+		`target format (${SUPPORTED_FORMATS.join(", ")})`,
 	)
 	.requiredOption(
 		"--provider <provider>",
-		`AI provider to use for generation (${supportedProviders.join(", ")})`,
+		`AI provider to use for generation (${SUPPORTED_PROVIDERS.join(", ")})`,
 	)
 	.argument("<file>", "configuration file to convert")
 	.action(
@@ -85,8 +86,9 @@ program
 				}
 				spinner.succeed("Files written successfully");
 
-				// TODO: display the official names of the tools
-				console.log(`\n✅ Converted ${from} config to ${to} format:`);
+				console.log(
+					`\n✅ Converted ${TOOL_NAME[from]} config to ${TOOL_NAME[to]} format:`,
+				);
 				for (const file of converted.files) {
 					console.log(`   📁 ${file.path}`);
 				}

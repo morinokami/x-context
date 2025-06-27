@@ -9,19 +9,30 @@ const packageJson = JSON.parse(readFileSync(packageJsonPath, "utf-8"));
 
 export const packageVersion = packageJson.version;
 
-export const supportedFormats = [
+// TODO: support more formats and providers
+export const SUPPORTED_FORMATS = [
 	"copilot",
 	"claude-code",
 	"cursor",
 	"gemini-cli",
 ] as const;
+export const SUPPORTED_PROVIDERS = ["openai", "anthropic"] as const;
 
-export const supportedProviders = ["openai", "anthropic"] as const;
+export type SupportedFormat = (typeof SUPPORTED_FORMATS)[number];
+export type SupportedProvider = (typeof SUPPORTED_PROVIDERS)[number];
 
-export type SupportedFormat = (typeof supportedFormats)[number];
-export type SupportedProvider = (typeof supportedProviders)[number];
+export const TOOL_NAME: Record<SupportedFormat, string> = {
+	copilot: "GitHub Copilot",
+	"claude-code": "Claude Code",
+	cursor: "Cursor",
+	"gemini-cli": "Gemini CLI",
+} as const;
+export const PROVIDER_NAME: Record<SupportedProvider, string> = {
+	openai: "OpenAI",
+	anthropic: "Anthropic",
+} as const;
 
-export const configDocuments = {
+export const DOC_URL = {
 	copilot: [
 		"https://raw.githubusercontent.com/github/docs/refs/heads/main/content/copilot/customizing-copilot/adding-repository-custom-instructions-for-github-copilot.md",
 	],

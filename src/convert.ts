@@ -5,7 +5,7 @@ import type { Ora } from "ora";
 import { z } from "zod";
 
 import type { SupportedFormat, SupportedProvider } from "./constants";
-import { configDocuments } from "./constants";
+import { DOC_URL, PROVIDER_NAME, TOOL_NAME } from "./constants";
 
 export async function convertConfig(
 	content: string,
@@ -16,17 +16,18 @@ export async function convertConfig(
 ) {
 	spinner.text = `Fetching ${from} documentation...`;
 	const sourceConfigDocuments = await Promise.all(
-		configDocuments[from].map((url) => fetch(url).then((res) => res.text())),
+		DOC_URL[from].map((url) => fetch(url).then((res) => res.text())),
 	);
 
 	spinner.text = `Fetching ${to} documentation...`;
 	const targetConfigDocuments = await Promise.all(
-		configDocuments[to].map((url) => fetch(url).then((res) => res.text())),
+		DOC_URL[to].map((url) => fetch(url).then((res) => res.text())),
 	);
 	spinner.succeed("Configuration documentation fetched successfully");
 
-	// TODO: display the official name of the provider
-	spinner.start(`Generating ${to} configuration using ${provider}...`);
+	spinner.start(
+		`Generating ${TOOL_NAME[to]} configuration using ${PROVIDER_NAME[provider]}...`,
+	);
 	const generatedConfig = await generateConfig(
 		content,
 		sourceConfigDocuments,
