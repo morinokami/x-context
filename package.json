@@ -24,7 +24,9 @@
 		"typescript": "5.8.3"
 	},
 	"dependencies": {
+		"@anthropic-ai/sdk": "0.55.0",
 		"commander": "14.0.0",
+		"openai": "5.7.0",
 		"zod": "3.25.67"
 	}
 }

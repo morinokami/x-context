@@ -47,7 +47,10 @@ program
 	)
 	.argument("<file>", "configuration file to convert")
 	.action(
-		(file: string, options: { from: string; to: string; provider: string }) => {
+		async (
+			file: string,
+			options: { from: string; to: string; provider: string },
+		) => {
 			const validationResult = CliOptionsSchema.safeParse(options);
 			if (!validationResult.success) {
 				const errors = validationResult.error.issues.map(
@@ -65,13 +68,16 @@ program
 
 			try {
 				const content = readFileSync(filePath, "utf-8");
-				const converted = convertConfig(content, from, to, provider);
+				const converted = await convertConfig(content, from, to, provider);
 
-				// TODO: Write to new file with appropriate path
-				const outputPath = "converted.txt";
-				writeFileSync(outputPath, converted);
+				for (const file of converted) {
+					writeFileSync(file.path, file.content);
+				}
 
-				console.log(`Converted ${from} config to ${to} format: ${outputPath}`);
+				console.log(`Converted ${from} config to ${to} format`);
+				for (const file of converted) {
+					console.log(`- ${file.path}`);
+				}
 			} catch (error) {
 				console.error(
 					`Error: ${error instanceof Error ? error.message : String(error)}`,

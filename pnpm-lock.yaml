@@ -8,9 +8,15 @@ importers:
 
   .:
     dependencies:
+      '@anthropic-ai/sdk':
+        specifier: 0.55.0
+        version: 0.55.0
       commander:
         specifier: 14.0.0
         version: 14.0.0
+      openai:
+        specifier: 5.7.0
+        version: 5.7.0(zod@3.25.67)
       zod:
         specifier: 3.25.67
         version: 3.25.67
@@ -32,6 +38,10 @@ importers:
         version: 5.8.3
 
 packages:
+
+  '@anthropic-ai/sdk@0.55.0':
+    resolution: {integrity: sha512-VdxPRWPoeeVQt0XUZ3cXfeLB65Skkoo1FS7JAkr8/C7Q8+wjV7k2RsVGmFXBq12VeHxua7MUtNqXx6k8hgoIVg==}
+    hasBin: true
 
   '@babel/generator@7.27.5':
     resolution: {integrity: sha512-ZGhA37l0e/g2s1Cnzdix0O3aLYm66eF8aufiVteOgnwxgnRP8GoyMj7VWsgWnQbVKXyge7hqrFh2K2TQM6t1Hw==}
@@ -401,6 +411,18 @@ packages:
   once@1.4.0:
     resolution: {integrity: sha512-lNaJgI+2Q5URQBkccEKHTQOPaXdUxnZZElQTZY0MFUAuaEqe1E+Nyvgdz/aIyNi6Z9MzO5dv1H8n58/GELp3+w==}
 
+  openai@5.7.0:
+    resolution: {integrity: sha512-zXWawZl6J/P5Wz57/nKzVT3kJQZvogfuyuNVCdEp4/XU2UNrjL7SsuNpWAyLZbo6HVymwmnfno9toVzBhelygA==}
+    hasBin: true
+    peerDependencies:
+      ws: ^8.18.0
+      zod: ^3.23.8
+    peerDependenciesMeta:
+      ws:
+        optional: true
+      zod:
+        optional: true
+
   path-key@3.1.1:
     resolution: {integrity: sha512-ojmeN0qd+y0jszEtoY48r0Peq5dwMEkIlCOu6Q5f41lfkswXuKtYrhgoTpLnyIcHm24Uhqx+5Tqm2InSwLhE6Q==}
     engines: {node: '>=8'}
@@ -563,6 +585,8 @@ packages:
     resolution: {integrity: sha512-idA2YXwpCdqUSKRCACDE6ItZD9TZzy3OZMtpfLoh6oPR47lipysRrJfjzMqFxQ3uJuUPyUeWe1r9vLH33xO/Qw==}
 
 snapshots:
+
+  '@anthropic-ai/sdk@0.55.0': {}
 
   '@babel/generator@7.27.5':
     dependencies:
@@ -877,6 +901,10 @@ snapshots:
   once@1.4.0:
     dependencies:
       wrappy: 1.0.2
+
+  openai@5.7.0(zod@3.25.67):
+    optionalDependencies:
+      zod: 3.25.67
 
   path-key@3.1.1: {}
 
