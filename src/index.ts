@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
-import { resolve, dirname } from "node:path";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { dirname, resolve } from "node:path";
 import { Command } from "commander";
 import ora from "ora";
 import * as z from "zod/v4";
@@ -15,7 +15,7 @@ import {
 	SUPPORTED_PROVIDERS,
 	TOOL_NAME,
 } from "./constants";
-import { convertConfig } from "./convert";
+import { confirm, convertConfig } from "./convert";
 
 const CliOptionsSchema = z.object({
 	from: z.enum(SUPPORTED_FORMATS, {
@@ -95,6 +95,16 @@ program
 					spinner,
 				);
 
+				console.log(`\n📁 Files to be written:`);
+				for (const file of converted.files) {
+					console.log(`- ${file.path}`);
+				}
+				const ok = await confirm("\nProceed with writing these files? (y/N): ");
+				if (!ok) {
+					console.log("Operation cancelled.");
+					process.exit(0);
+				}
+
 				spinner.start("Writing converted files...");
 				for (const file of converted.files) {
 					const fileDir = dirname(file.path);
@@ -104,13 +114,10 @@ program
 				spinner.succeed("Files written successfully");
 
 				console.log(
-					`\n💡 Converted ${TOOL_NAME[from]} config to ${TOOL_NAME[to]} format:`,
+					`\n💡 Converted ${TOOL_NAME[from]} config to ${TOOL_NAME[to]} format!`,
 				);
-				for (const file of converted.files) {
-					console.log(`   📁 ${file.path}`);
-				}
-				console.log(`💬 Total tokens: ${converted.usage.totalTokens}`);
 				console.log(`🤖 Model: ${PROVIDER_NAME[provider]} (${modelId})`);
+				console.log(`💬 Total tokens: ${converted.usage.totalTokens}`);
 			} catch (error) {
 				spinner.fail(
 					`Conversion failed: ${error instanceof Error ? error.message : String(error)}`,

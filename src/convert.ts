@@ -1,3 +1,4 @@
+import { createInterface } from "node:readline";
 import { anthropic } from "@ai-sdk/anthropic";
 import type { AnthropicMessagesModelId } from "@ai-sdk/anthropic/internal";
 import { openai } from "@ai-sdk/openai";
@@ -5,6 +6,7 @@ import type { OpenAIChatModelId } from "@ai-sdk/openai/internal";
 import { generateObject } from "ai";
 import type { Ora } from "ora";
 import { z } from "zod";
+
 import type { SupportedFormat, SupportedProvider } from "./constants";
 import { DOC_URL, PROVIDER_NAME, TOOL_NAME } from "./constants";
 
@@ -100,4 +102,18 @@ ${content}
 	});
 
 	return { files: object.files, usage };
+}
+
+export async function confirm(message: string) {
+	const rl = createInterface({
+		input: process.stdin,
+		output: process.stdout,
+	});
+
+	const answer = await new Promise<string>((resolve) => {
+		rl.question(message, resolve);
+	});
+	rl.close();
+
+	return answer.toLowerCase() === "y" || answer.toLowerCase() === "yes";
 }
