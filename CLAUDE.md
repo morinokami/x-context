@@ -48,7 +48,7 @@ This is x-context, a CLI tool that converts AI coding tool configuration files b
 2. **Model Selection**: Uses default models (o4-mini for OpenAI, claude-4-sonnet-20250514 for Anthropic) if --model not specified
 3. **Documentation Fetching**: Downloads format documentation with progress feedback
 4. **AI Conversion**: Sends comprehensive prompt to AI with structured output schema
-5. **File Output**: Writes converted files with paths determined by AI response
+5. **File Output**: Creates directories if needed and writes converted files with paths determined by AI response
 
 ### Conversion System
 - **Documentation URLs**: Live documentation fetched for accurate, up-to-date conversions
@@ -56,6 +56,7 @@ This is x-context, a CLI tool that converts AI coding tool configuration files b
 - **Single File Preference**: Prompt instructs AI to avoid file splitting unless necessary
 - **Model Routing**: Defaults to o4-mini for OpenAI and claude-4-sonnet-20250514 for Anthropic when --model not specified
 - **Error Handling**: Comprehensive error handling with user-friendly messages and spinner feedback
+- **Directory Handling**: Automatically creates parent directories when writing files with nested paths
 
 ### Environment Variables
 - `OPENAI_API_KEY` - Required when using `--provider=openai`

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-import { readFileSync, writeFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
+import { resolve, dirname } from "node:path";
 import { Command } from "commander";
 import ora from "ora";
 import * as z from "zod/v4";
@@ -95,9 +95,10 @@ program
 					spinner,
 				);
 
-				// TODO: check if the converted files can be saved to file.path
 				spinner.start("Writing converted files...");
 				for (const file of converted.files) {
+					const fileDir = dirname(file.path);
+					mkdirSync(fileDir, { recursive: true });
 					writeFileSync(file.path, file.content);
 				}
 				spinner.succeed("Files written successfully");
