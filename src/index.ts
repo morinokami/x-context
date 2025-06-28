@@ -74,7 +74,17 @@ program
 			}
 
 			const { from, to, provider, model } = validationResult.data;
+			if (
+				model &&
+				!(SUPPORTED_MODEL[provider] as readonly string[]).includes(model)
+			) {
+				console.error(
+					`Error: Model ${model} is not supported by provider ${provider}`,
+				);
+				process.exit(1);
+			}
 			const modelId = model ?? DEFAULT_MODEL[provider];
+
 			const filePath = resolve(file);
 
 			try {
