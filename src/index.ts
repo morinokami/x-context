@@ -29,8 +29,8 @@ const CliOptionsSchema = z.object({
 	}),
 	model: z
 		.enum(Object.values(SUPPORTED_MODEL).flat(), {
-			// TODO: too many models, just show a brief list of models
-			message: `--model must be one of: ${Object.values(SUPPORTED_MODEL).flat().join(", ")}`,
+			message:
+				"Invalid model. See https://github.com/morinokami/x-context for supported models",
 		})
 		.optional(),
 });
@@ -56,8 +56,7 @@ program
 	)
 	.option(
 		"--model <model>",
-		// TODO: too many models, just show a brief list of models
-		`AI model to use for generation (${Object.values(SUPPORTED_MODEL).flat().join(", ")})`,
+		`AI model to use for generation (See https://github.com/morinokami/x-context for the full list)`,
 	)
 	.argument("<file>", "context file to convert")
 	.action(
