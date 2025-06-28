@@ -52,7 +52,7 @@ program
 	)
 	.requiredOption(
 		"--provider <provider>",
-		`AI provider to use for generation (${SUPPORTED_PROVIDERS.join(", ")})`,
+		`AI model provider to use for generation (${SUPPORTED_PROVIDERS.join(", ")})`,
 	)
 	.option(
 		"--model <model>",
