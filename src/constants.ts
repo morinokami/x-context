@@ -19,7 +19,7 @@ export const SUPPORTED_FORMATS = [
 	"gemini-cli",
 ] as const;
 export const SUPPORTED_PROVIDERS = ["openai", "anthropic"] as const;
-// TODO: find a way to get the list of models from the SDKs
+// Generated automatically by scripts/build-supported-models.ts
 export const SUPPORTED_MODELS: {
 	openai: OpenAIChatModelId[];
 	anthropic: AnthropicMessagesModelId[];
@@ -85,6 +85,7 @@ export const SUPPORTED_MODELS: {
 		"claude-3-haiku-20240307",
 	],
 } as const;
+// TODO: are these the best defaults?
 export const DEFAULT_MODELS = {
 	openai: "o4-mini",
 	anthropic: "claude-4-sonnet-20250514",
