@@ -73,10 +73,10 @@ program
 		"--model <model>",
 		`AI model to use for generation (See https://github.com/morinokami/x-context for the full list)`,
 	)
-	.argument("<file>", "context file to convert")
+	.argument("<files...>", "context files to convert")
 	.action(
 		async (
-			file: string,
+			files: string[],
 			options: { from: string; to: string; provider?: string; model?: string },
 		) => {
 			const validationResult = CliOptionsSchema.safeParse(options);
@@ -129,15 +129,25 @@ program
 				process.exit(1);
 			}
 
-			const filePath = resolve(file);
-
+			const filePaths = files.map((file) => resolve(file));
 			try {
-				spinner.start("Reading source context file...");
-				const content = readFileSync(filePath, "utf-8");
-				spinner.succeed("Source context file read successfully");
+				spinner.start(`Reading ${filePaths.length} source context file(s)...`);
+				const contents = filePaths.map((filePath) => {
+					try {
+						return {
+							path: filePath,
+							content: readFileSync(filePath, "utf-8"),
+						};
+					} catch (error) {
+						throw new Error(
+							`Failed to read file ${filePath}: ${error instanceof Error ? error.message : String(error)}`,
+						);
+					}
+				});
+				spinner.succeed("Source context files read successfully");
 
 				const converted = await convertContext(
-					content,
+					contents,
 					from,
 					to,
 					provider,
@@ -164,7 +174,7 @@ program
 				spinner.succeed("Files written successfully");
 
 				console.log(
-					`\n💡 Converted ${TOOL_NAME[from]} context files to ${TOOL_NAME[to]} format!`,
+					`\n💡 Converted ${filePaths.length} ${TOOL_NAME[from]} context file(s) to ${TOOL_NAME[to]} format!`,
 				);
 				console.log(`🤖 Model: ${PROVIDER_NAME[provider]} (${modelId})`);
 				console.log(`💬 Total tokens: ${converted.usage.totalTokens}`);

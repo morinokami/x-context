@@ -16,7 +16,7 @@ import type {
 import { DOC_URL, PROVIDER_NAME, TOOL_NAME } from "./constants";
 
 export async function convertContext(
-	content: string,
+	contents: { path: string; content: string }[],
 	from: SupportedFormat,
 	to: SupportedFormat,
 	provider: SupportedProvider,
@@ -39,7 +39,7 @@ export async function convertContext(
 		`Generating ${TOOL_NAME[to]} context files using ${PROVIDER_NAME[provider]} ${modelId}...`,
 	);
 	const generatedContext = await generateContext(
-		content,
+		contents,
 		sourceContextDocuments,
 		targetContextDocuments,
 		provider,
@@ -51,7 +51,7 @@ export async function convertContext(
 }
 
 async function generateContext(
-	content: string,
+	contents: { path: string; content: string }[],
 	sourceContextDocuments: string[],
 	targetContextDocuments: string[],
 	provider: SupportedProvider,
@@ -61,19 +61,20 @@ async function generateContext(
 		| SupportedOpenAIModel,
 ) {
 	const prompt = `
-You are a context file conversion assistant. Your task is to convert a source context file to a target context file format.
+You are a context file conversion assistant. Your task is to convert source context files to a target context file format.
 
 You will be provided with:
 - Documentation for the source context file format
 - Documentation for the target context file format  
-- The content of the source context file
+- The content of ${contents.length} source context file(s)
 
-Please convert the source context file to the target format based on the documentation provided. Ensure that:
+Please convert the source context files to the target format based on the documentation provided. Ensure that:
 - All relevant settings and context instructions are preserved
 - The output follows the target format's syntax and conventions
 - Any format-specific features are properly adapted
-- The converted context file maintains the same functional intent
+- The converted context files maintain the same functional intent
 - You must output both the appropriate file path(s) and the file content(s) for the target format
+- When converting multiple files, intelligently merge or organize them according to the target format's conventions
 
 The conversion may result in one or multiple files depending on the target format's requirements. However, prefer keeping everything in a single file unless the target format requires file separation. For each file, provide:
 - The correct file path (including filename and extension) where the file should be placed
@@ -89,10 +90,14 @@ Target context file documentation:
 ${targetContextDocuments.map((doc) => `<content>${doc}</content>`).join("\n")}
 </target_docs>
 
-Source context file content:
-<source_context>
-${content}
-</source_context>
+Source context files:
+${contents
+	.map(
+		(file, index) => `<source_file_${index + 1} path="${file.path}">
+${file.content}
+</source_file_${index + 1}>`,
+	)
+	.join("\n\n")}
 `;
 
 	const model = createModel(provider, modelId);
