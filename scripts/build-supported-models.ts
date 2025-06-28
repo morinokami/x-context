@@ -6,8 +6,8 @@ import { pathToFileURL } from "node:url";
 import * as ts from "typescript";
 
 interface ModelDefinition {
-	openai: string[];
 	anthropic: string[];
+	openai: string[];
 }
 
 function extractUnionTypes(fileName: string, typeName: string): string[] {
@@ -53,22 +53,22 @@ function updateConstantsFile(models: ModelDefinition): void {
 	let content = readFileSync(constantsPath, "utf-8");
 
 	// Replace the SUPPORTED_MODELS definition
-	const openaiModelsArray = models.openai
+	const anthropicModelsArray = models.anthropic
 		.map((model) => `\t\t"${model}"`)
 		.join(",\n");
-	const anthropicModelsArray = models.anthropic
+	const openaiModelsArray = models.openai
 		.map((model) => `\t\t"${model}"`)
 		.join(",\n");
 
 	const newSupportedModels = `export const SUPPORTED_MODELS: {
-	openai: OpenAIChatModelId[];
 	anthropic: AnthropicMessagesModelId[];
+	openai: OpenAIChatModelId[];
 } = {
-	openai: [
-${openaiModelsArray},
-	],
 	anthropic: [
 ${anthropicModelsArray},
+	],
+	openai: [
+${openaiModelsArray},
 	],
 } as const;`;
 
@@ -82,10 +82,6 @@ ${anthropicModelsArray},
 
 async function main(): Promise<void> {
 	try {
-		// Extract OpenAI models
-		const openaiPath = await findAISDKPath("openai");
-		const openaiModels = extractUnionTypes(openaiPath, "OpenAIChatModelId");
-
 		// Extract Anthropic models
 		const anthropicPath = await findAISDKPath("anthropic");
 		const anthropicModels = extractUnionTypes(
@@ -93,10 +89,14 @@ async function main(): Promise<void> {
 			"AnthropicMessagesModelId",
 		);
 
+		// Extract OpenAI models
+		const openaiPath = await findAISDKPath("openai");
+		const openaiModels = extractUnionTypes(openaiPath, "OpenAIChatModelId");
+
 		// Update constants.ts
 		const models: ModelDefinition = {
-			openai: openaiModels,
 			anthropic: anthropicModels,
+			openai: openaiModels,
 		};
 
 		updateConstantsFile(models);

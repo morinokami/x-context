@@ -7,7 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 This is x-context, a CLI tool that converts AI coding tool context files between different formats using AI-powered conversion. The tool helps users migrate context files between AI coding assistants (e.g., from Claude Code to Cursor) by leveraging the Vercel AI SDK's structured output capabilities.
 
 **Supported Formats**: copilot, claude-code, cursor, gemini-cli
-**Supported Providers**: openai, anthropic
+**Supported Providers**: anthropic, openai
 
 ## Development Commands
 
@@ -29,7 +29,7 @@ This is x-context, a CLI tool that converts AI coding tool context files between
 
 ### AI Integration Architecture
 - **Vercel AI SDK**: Uses `generateObject()` with unified interface for multiple providers
-- **Multi-Provider Support**: Seamless switching between OpenAI and Anthropic with same API
+- **Multi-Provider Support**: Seamless switching between Anthropic and OpenAI with same API
 - **Documentation System**: Automatically fetches format-specific documentation from live URLs
 - **Prompt Engineering**: Comprehensive system prompt that includes source/target docs and conversion requirements
 - **Structured Output**: Zod schemas ensure type-safe AI responses
@@ -45,7 +45,7 @@ This is x-context, a CLI tool that converts AI coding tool context files between
 
 ### CLI Flow
 1. **Validation**: Zod schemas validate CLI arguments (--from, --to, --provider, optional --model)
-2. **Model Selection**: Uses default models (o4-mini for OpenAI, claude-4-sonnet-20250514 for Anthropic) if --model not specified
+2. **Model Selection**: Uses default models (claude-4-sonnet-20250514 for Anthropic, o4-mini for OpenAI) if --model not specified
 3. **Documentation Fetching**: Downloads format documentation with progress feedback
 4. **AI Conversion**: Sends comprehensive prompt to AI with structured output schema
 5. **User Confirmation**: Shows file paths and asks for confirmation before writing
@@ -55,14 +55,14 @@ This is x-context, a CLI tool that converts AI coding tool context files between
 - **Documentation URLs**: Live documentation fetched for accurate, up-to-date conversions
 - **Structured Output**: AI returns `{files: [{path: string, content: string}]}` validated by Zod
 - **Single File Preference**: Prompt instructs AI to avoid file splitting unless necessary
-- **Model Routing**: Defaults to o4-mini for OpenAI and claude-4-sonnet-20250514 for Anthropic when --model not specified
+- **Model Routing**: Defaults to claude-4-sonnet-20250514 for Anthropic and o4-mini for OpenAI when --model not specified
 - **Error Handling**: Comprehensive error handling with user-friendly messages and spinner feedback
 - **Directory Handling**: Automatically creates parent directories when writing files with nested paths
 - **User Safety**: Prompts for confirmation before writing files, showing all paths that will be created
 
 ### Environment Variables
-- `OPENAI_API_KEY` - Required when using `--provider=openai`
 - `ANTHROPIC_API_KEY` - Required when using `--provider=anthropic`
+- `OPENAI_API_KEY` - Required when using `--provider=openai`
 
 ## Configuration Notes
 

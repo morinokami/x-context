@@ -18,12 +18,26 @@ export const SUPPORTED_FORMATS = [
 	"cursor",
 	"gemini-cli",
 ] as const;
-export const SUPPORTED_PROVIDERS = ["openai", "anthropic"] as const;
+export const SUPPORTED_PROVIDERS = ["anthropic", "openai"] as const;
 // Generated automatically by scripts/build-supported-models.ts
 export const SUPPORTED_MODELS: {
-	openai: OpenAIChatModelId[];
 	anthropic: AnthropicMessagesModelId[];
+	openai: OpenAIChatModelId[];
 } = {
+	anthropic: [
+		"claude-4-opus-20250514",
+		"claude-4-sonnet-20250514",
+		"claude-3-7-sonnet-20250219",
+		"claude-3-5-sonnet-latest",
+		"claude-3-5-sonnet-20241022",
+		"claude-3-5-sonnet-20240620",
+		"claude-3-5-haiku-latest",
+		"claude-3-5-haiku-20241022",
+		"claude-3-opus-latest",
+		"claude-3-opus-20240229",
+		"claude-3-sonnet-20240229",
+		"claude-3-haiku-20240307",
+	],
 	openai: [
 		"o1",
 		"o1-2024-12-17",
@@ -70,25 +84,11 @@ export const SUPPORTED_MODELS: {
 		"gpt-3.5-turbo-1106",
 		"chatgpt-4o-latest",
 	],
-	anthropic: [
-		"claude-4-opus-20250514",
-		"claude-4-sonnet-20250514",
-		"claude-3-7-sonnet-20250219",
-		"claude-3-5-sonnet-latest",
-		"claude-3-5-sonnet-20241022",
-		"claude-3-5-sonnet-20240620",
-		"claude-3-5-haiku-latest",
-		"claude-3-5-haiku-20241022",
-		"claude-3-opus-latest",
-		"claude-3-opus-20240229",
-		"claude-3-sonnet-20240229",
-		"claude-3-haiku-20240307",
-	],
 } as const;
 // TODO: are these the best defaults?
 export const DEFAULT_MODELS = {
-	openai: "o4-mini",
 	anthropic: "claude-4-sonnet-20250514",
+	openai: "o4-mini",
 } as const;
 
 export type SupportedFormat = (typeof SUPPORTED_FORMATS)[number];
@@ -101,8 +101,8 @@ export const TOOL_NAME: Record<SupportedFormat, string> = {
 	"gemini-cli": "Gemini CLI",
 } as const;
 export const PROVIDER_NAME: Record<SupportedProvider, string> = {
-	openai: "OpenAI",
 	anthropic: "Anthropic",
+	openai: "OpenAI",
 } as const;
 
 export const DOC_URL = {
