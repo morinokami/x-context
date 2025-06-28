@@ -13,9 +13,22 @@ import {
 	SUPPORTED_FORMATS,
 	SUPPORTED_MODEL,
 	SUPPORTED_PROVIDERS,
+	type SupportedAnthropicModel,
+	type SupportedGeminiModel,
+	type SupportedOpenAIModel,
+	type SupportedProvider,
 	TOOL_NAME,
 } from "./constants";
 import { confirm, convertContext } from "./convert";
+
+function findProviderForModel(model: string) {
+	for (const [provider, models] of Object.entries(SUPPORTED_MODEL)) {
+		if (models.includes(model as never)) {
+			return provider as SupportedProvider;
+		}
+	}
+	return null;
+}
 
 const CliOptionsSchema = z.object({
 	from: z.enum(SUPPORTED_FORMATS, {
@@ -24,9 +37,11 @@ const CliOptionsSchema = z.object({
 	to: z.enum(SUPPORTED_FORMATS, {
 		message: `--to must be one of: ${SUPPORTED_FORMATS.join(", ")}`,
 	}),
-	provider: z.enum(SUPPORTED_PROVIDERS, {
-		message: `--provider must be one of: ${SUPPORTED_PROVIDERS.join(", ")}`,
-	}),
+	provider: z
+		.enum(SUPPORTED_PROVIDERS, {
+			message: `--provider must be one of: ${SUPPORTED_PROVIDERS.join(", ")}`,
+		})
+		.optional(),
 	model: z
 		.enum(Object.values(SUPPORTED_MODEL).flat(), {
 			message:
@@ -50,7 +65,7 @@ program
 		"--to <format>",
 		`target format (${SUPPORTED_FORMATS.join(", ")})`,
 	)
-	.requiredOption(
+	.option(
 		"--provider <provider>",
 		`AI model provider to use for generation (${SUPPORTED_PROVIDERS.join(", ")})`,
 	)
@@ -62,7 +77,7 @@ program
 	.action(
 		async (
 			file: string,
-			options: { from: string; to: string; provider: string; model: string },
+			options: { from: string; to: string; provider?: string; model?: string },
 		) => {
 			const validationResult = CliOptionsSchema.safeParse(options);
 			if (!validationResult.success) {
@@ -73,17 +88,46 @@ program
 				process.exit(1);
 			}
 
-			const { from, to, provider, model } = validationResult.data;
-			if (
-				model &&
-				!(SUPPORTED_MODEL[provider] as readonly string[]).includes(model)
-			) {
-				console.error(
-					`Error: Model ${model} is not supported by provider ${provider}`,
-				);
+			const {
+				from,
+				to,
+				provider: specifiedProvider,
+				model: specifiedModel,
+			} = validationResult.data;
+
+			// Determine the actual provider and model to use
+			let provider: SupportedProvider;
+			let modelId:
+				| SupportedAnthropicModel
+				| SupportedGeminiModel
+				| SupportedOpenAIModel;
+			if (specifiedModel) {
+				// Model is provided, find its provider
+				const modelProvider = findProviderForModel(specifiedModel);
+				if (!modelProvider) {
+					console.error(
+						`Error: Model ${specifiedModel} is not supported. See https://github.com/morinokami/x-context for supported models`,
+					);
+					process.exit(1);
+				}
+
+				if (specifiedProvider && specifiedProvider !== modelProvider) {
+					console.error(
+						`Error: Model ${specifiedModel} belongs to provider ${modelProvider} but ${specifiedProvider} was specified`,
+					);
+					process.exit(1);
+				}
+
+				provider = modelProvider;
+				modelId = specifiedModel;
+			} else if (specifiedProvider) {
+				// Provider is provided but no model, use default model
+				provider = specifiedProvider;
+				modelId = DEFAULT_MODEL[specifiedProvider];
+			} else {
+				console.error("Error: Either provider or model must be specified");
 				process.exit(1);
 			}
-			const modelId = model ?? DEFAULT_MODEL[provider];
 
 			const filePath = resolve(file);
 

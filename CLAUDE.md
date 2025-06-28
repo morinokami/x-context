@@ -13,11 +13,11 @@ This is x-context, a CLI tool that converts AI coding tool context files between
 
 - **Build**: `pnpm build` - Uses tsdown to compile TypeScript and generate dist/
 - **Lint & Format**: `pnpm biome check` - Runs Biome linter and formatter  
-- **Format**: `pnpm biome format --write` - Auto-fixes formatting issues
+- **Format**: `pnpm biome check --write` - Auto-fixes formatting issues
 - **Update Models**: `pnpm prebuild` - Extracts latest model lists from AI SDK packages
-- **Test CLI**: `npx tsx src/index.ts --from=claude-code --to=cursor --provider=openai ./CLAUDE.md`
-- **Test Built CLI**: `node dist/index.js --from=claude-code --to=cursor --provider=openai ./CLAUDE.md`
-- **Test with Model**: `npx tsx src/index.ts --from=claude-code --to=cursor --provider=gemini --model=gemini-2.5-flash-preview-04-17 ./CLAUDE.md`
+- **Test CLI**: `npx tsx src/index.ts --from claude-code --to cursor --provider openai ./CLAUDE.md`
+- **Test Built CLI**: `node dist/index.js --from claude-code --to cursor --provider openai ./CLAUDE.md`
+- **Test with Model**: `npx tsx src/index.ts --from claude-code --to cursor --model o3 ./CLAUDE.md`
 
 ## Architecture
 
