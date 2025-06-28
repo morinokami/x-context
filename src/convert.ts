@@ -60,21 +60,18 @@ async function generateContext(
 		| SupportedGeminiModel
 		| SupportedOpenAIModel,
 ) {
-	const prompt = `
-You are a context file conversion assistant. Your task is to convert source context files to a target context file format.
+	// TODO: add general guidelines for each tool
+	const systemPrompt = `You are a context file conversion assistant specialized in converting context files between different AI coding tool formats.
 
-You will be provided with:
-- Documentation for the source context file format
-- Documentation for the target context file format  
-- The content of ${contents.length} source context file(s)
+Core responsibilities:
+- Preserve all relevant settings and context instructions
+- Follow target format's syntax and conventions exactly
+- Adapt format-specific features appropriately
+- Maintain functional intent across conversions
+- Output appropriate file path(s) and content(s) based on target format's documentation requirements
+- When converting multiple files, intelligently merge or organize them according to the target format's conventions`;
 
-Please convert the source context files to the target format based on the documentation provided. Ensure that:
-- All relevant settings and context instructions are preserved
-- The output follows the target format's syntax and conventions
-- Any format-specific features are properly adapted
-- The converted context files maintain the same functional intent
-- Output appropriate file path(s) and content(s) based on the target format's documentation requirements
-- When converting multiple files, intelligently merge or organize them according to the target format's conventions
+	const userMessage = `Convert ${contents.length} source context file(s) to the target format.
 
 Source context file documentation:
 <source_docs>
@@ -93,12 +90,14 @@ ${contents
 ${file.content}
 </source_file_${index + 1}>`,
 	)
-	.join("\n\n")}
-`;
+	.join("\n\n")}`;
 
 	const model = createModel(provider, modelId);
 	const { object, usage } = await generateObject({
 		model,
+		system: systemPrompt,
+		messages: [{ role: "user", content: userMessage }],
+		temperature: 0.2,
 		schema: z.object({
 			files: z.array(
 				z.object({
@@ -107,7 +106,6 @@ ${file.content}
 				}),
 			),
 		}),
-		prompt,
 	});
 
 	return { files: object.files, usage };
