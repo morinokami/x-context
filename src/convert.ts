@@ -1,13 +1,18 @@
 import { createInterface } from "node:readline";
 import { anthropic } from "@ai-sdk/anthropic";
-import type { AnthropicMessagesModelId } from "@ai-sdk/anthropic/internal";
+import { google } from "@ai-sdk/google";
 import { openai } from "@ai-sdk/openai";
-import type { OpenAIChatModelId } from "@ai-sdk/openai/internal";
 import { generateObject } from "ai";
 import type { Ora } from "ora";
 import { z } from "zod";
 
-import type { SupportedFormat, SupportedProvider } from "./constants";
+import type {
+	SupportedAnthropicModel,
+	SupportedFormat,
+	SupportedGeminiModel,
+	SupportedOpenAIModel,
+	SupportedProvider,
+} from "./constants";
 import { DOC_URL, PROVIDER_NAME, TOOL_NAME } from "./constants";
 
 export async function convertContext(
@@ -15,7 +20,10 @@ export async function convertContext(
 	from: SupportedFormat,
 	to: SupportedFormat,
 	provider: SupportedProvider,
-	modelId: OpenAIChatModelId | AnthropicMessagesModelId,
+	modelId:
+		| SupportedAnthropicModel
+		| SupportedGeminiModel
+		| SupportedOpenAIModel,
 	spinner: Ora,
 ) {
 	spinner.start("Fetching documentation...");
@@ -47,7 +55,10 @@ async function generateContext(
 	sourceContextDocuments: string[],
 	targetContextDocuments: string[],
 	provider: SupportedProvider,
-	modelId: OpenAIChatModelId | AnthropicMessagesModelId,
+	modelId:
+		| SupportedAnthropicModel
+		| SupportedGeminiModel
+		| SupportedOpenAIModel,
 ) {
 	const prompt = `
 You are a context file conversion assistant. Your task is to convert a source context file to a target context file format.
@@ -84,8 +95,7 @@ ${content}
 </source_context>
 `;
 
-	const model = provider === "openai" ? openai(modelId) : anthropic(modelId);
-
+	const model = createModel(provider, modelId);
 	const { object, usage } = await generateObject({
 		model,
 		schema: z.object({
@@ -100,6 +110,23 @@ ${content}
 	});
 
 	return { files: object.files, usage };
+}
+
+function createModel(
+	provider: SupportedProvider,
+	modelId:
+		| SupportedAnthropicModel
+		| SupportedGeminiModel
+		| SupportedOpenAIModel,
+) {
+	if (provider === "openai") {
+		return openai(modelId);
+	} else if (provider === "gemini") {
+		return google(modelId);
+	} else if (provider === "anthropic") {
+		return anthropic(modelId);
+	}
+	throw new Error(`Unsupported provider: ${provider}`);
 }
 
 export async function confirm(message: string) {
