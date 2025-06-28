@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Overview
 
-This is x-context, a CLI tool that converts AI coding tool configuration files between different formats using AI-powered conversion. The tool helps users migrate configurations between AI coding assistants (e.g., from Claude Code to Cursor) by leveraging the Vercel AI SDK's structured output capabilities.
+This is x-context, a CLI tool that converts AI coding tool context files between different formats using AI-powered conversion. The tool helps users migrate context files between AI coding assistants (e.g., from Claude Code to Cursor) by leveraging the Vercel AI SDK's structured output capabilities.
 
 **Supported Formats**: copilot, claude-code, cursor, gemini-cli
 **Supported Providers**: openai, anthropic

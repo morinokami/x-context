@@ -15,7 +15,7 @@ import {
 	SUPPORTED_PROVIDERS,
 	TOOL_NAME,
 } from "./constants";
-import { confirm, convertConfig } from "./convert";
+import { confirm, convertContext } from "./convert";
 
 const CliOptionsSchema = z.object({
 	from: z.enum(SUPPORTED_FORMATS, {
@@ -40,9 +40,7 @@ const program = new Command();
 
 program
 	.name("x-context")
-	.description(
-		"Convert AI coding tool configuration files between different formats",
-	)
+	.description("Convert AI coding tool context files between different formats")
 	.version(packageVersion)
 	.requiredOption(
 		"--from <format>",
@@ -61,7 +59,7 @@ program
 		// TODO: too many models, just show a brief list of models
 		`AI model to use for generation (${Object.values(SUPPORTED_MODELS).flat().join(", ")})`,
 	)
-	.argument("<file>", "configuration file to convert")
+	.argument("<file>", "context file to convert")
 	.action(
 		async (
 			file: string,
@@ -81,12 +79,11 @@ program
 			const filePath = resolve(file);
 
 			try {
-				spinner.start("Reading source configuration file...");
+				spinner.start("Reading source context file...");
 				const content = readFileSync(filePath, "utf-8");
-				spinner.succeed("Source configuration file read successfully");
+				spinner.succeed("Source context file read successfully");
 
-				spinner.start("Fetching configuration documentation...");
-				const converted = await convertConfig(
+				const converted = await convertContext(
 					content,
 					from,
 					to,
@@ -114,7 +111,7 @@ program
 				spinner.succeed("Files written successfully");
 
 				console.log(
-					`\n💡 Converted ${TOOL_NAME[from]} config to ${TOOL_NAME[to]} format!`,
+					`\n💡 Converted ${TOOL_NAME[from]} context files to ${TOOL_NAME[to]} format!`,
 				);
 				console.log(`🤖 Model: ${PROVIDER_NAME[provider]} (${modelId})`);
 				console.log(`💬 Total tokens: ${converted.usage.totalTokens}`);

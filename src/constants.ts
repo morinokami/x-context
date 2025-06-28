@@ -106,7 +106,7 @@ export const PROVIDER_NAME: Record<SupportedProvider, string> = {
 
 export const DOC_URL = {
 	copilot: [
-		"https://raw.githubusercontent.com/github/docs/refs/heads/main/content/copilot/customizing-copilot/adding-repository-custom-instructions-for-github-copilot.md",
+		"https://raw.githubusercontent.com/github/docs/refs/heads/main/content/copilot/how-tos/custom-instructions/adding-personal-custom-instructions-for-github-copilot.md",
 	],
 	"claude-code": ["https://docs.anthropic.com/en/docs/claude-code/memory.md"],
 	cursor: ["https://docs.cursor.com/context/rules.md"],

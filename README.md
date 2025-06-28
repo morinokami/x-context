@@ -1,6 +1,6 @@
 # x-context
 
-Convert an AI coding tool's configuration file to another format.
+Convert AI coding tool context files between different formats.
 
 ```sh
 npx x-context@latest --from claude-code --to copilot --provider anthropic ./CLAUDE.md
