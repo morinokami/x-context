@@ -73,12 +73,8 @@ Please convert the source context files to the target format based on the docume
 - The output follows the target format's syntax and conventions
 - Any format-specific features are properly adapted
 - The converted context files maintain the same functional intent
-- You must output both the appropriate file path(s) and the file content(s) for the target format
+- Output appropriate file path(s) and content(s) based on the target format's documentation requirements
 - When converting multiple files, intelligently merge or organize them according to the target format's conventions
-
-The conversion may result in one or multiple files depending on the target format's requirements. However, prefer keeping everything in a single file unless the target format requires file separation. For each file, provide:
-- The correct file path (including filename and extension) where the file should be placed
-- The complete file content in the target format
 
 Source context file documentation:
 <source_docs>
