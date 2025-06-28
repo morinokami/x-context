@@ -1,8 +1,6 @@
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import type { AnthropicMessagesModelId } from "@ai-sdk/anthropic/internal";
-import type { OpenAIChatModelId } from "@ai-sdk/openai/internal";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -18,12 +16,9 @@ export const SUPPORTED_FORMATS = [
 	"cursor",
 	"gemini-cli",
 ] as const;
-export const SUPPORTED_PROVIDERS = ["anthropic", "openai"] as const;
+export const SUPPORTED_PROVIDERS = ["anthropic", "gemini", "openai"] as const;
 // Generated automatically by scripts/build-supported-models.ts
-export const SUPPORTED_MODELS: {
-	anthropic: AnthropicMessagesModelId[];
-	openai: OpenAIChatModelId[];
-} = {
+export const SUPPORTED_MODEL = {
 	anthropic: [
 		"claude-4-opus-20250514",
 		"claude-4-sonnet-20250514",
@@ -37,6 +32,32 @@ export const SUPPORTED_MODELS: {
 		"claude-3-opus-20240229",
 		"claude-3-sonnet-20240229",
 		"claude-3-haiku-20240307",
+	],
+	gemini: [
+		"gemini-1.5-flash",
+		"gemini-1.5-flash-latest",
+		"gemini-1.5-flash-001",
+		"gemini-1.5-flash-002",
+		"gemini-1.5-flash-8b",
+		"gemini-1.5-flash-8b-latest",
+		"gemini-1.5-flash-8b-001",
+		"gemini-1.5-pro",
+		"gemini-1.5-pro-latest",
+		"gemini-1.5-pro-001",
+		"gemini-1.5-pro-002",
+		"gemini-2.0-flash",
+		"gemini-2.0-flash-001",
+		"gemini-2.0-flash-live-001",
+		"gemini-2.0-flash-lite",
+		"gemini-2.0-pro-exp-02-05",
+		"gemini-2.0-flash-thinking-exp-01-21",
+		"gemini-2.0-flash-exp",
+		"gemini-2.5-pro-exp-03-25",
+		"gemini-2.5-pro-preview-05-06",
+		"gemini-2.5-flash-preview-04-17",
+		"gemini-exp-1206",
+		"gemma-3-27b-it",
+		"learnlm-1.5-pro-experimental",
 	],
 	openai: [
 		"o1",
@@ -86,13 +107,18 @@ export const SUPPORTED_MODELS: {
 	],
 } as const;
 // TODO: are these the best defaults?
-export const DEFAULT_MODELS = {
+export const DEFAULT_MODEL = {
 	anthropic: "claude-4-sonnet-20250514",
+	gemini: "gemini-2.5-flash-preview-04-17",
 	openai: "o4-mini",
 } as const;
 
 export type SupportedFormat = (typeof SUPPORTED_FORMATS)[number];
 export type SupportedProvider = (typeof SUPPORTED_PROVIDERS)[number];
+export type SupportedAnthropicModel =
+	(typeof SUPPORTED_MODEL.anthropic)[number];
+export type SupportedGeminiModel = (typeof SUPPORTED_MODEL.gemini)[number];
+export type SupportedOpenAIModel = (typeof SUPPORTED_MODEL.openai)[number];
 
 export const TOOL_NAME: Record<SupportedFormat, string> = {
 	copilot: "GitHub Copilot",
@@ -102,6 +128,7 @@ export const TOOL_NAME: Record<SupportedFormat, string> = {
 } as const;
 export const PROVIDER_NAME: Record<SupportedProvider, string> = {
 	anthropic: "Anthropic",
+	gemini: "Gemini",
 	openai: "OpenAI",
 } as const;
 

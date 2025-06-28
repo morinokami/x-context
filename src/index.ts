@@ -7,11 +7,11 @@ import ora from "ora";
 import * as z from "zod/v4";
 
 import {
-	DEFAULT_MODELS,
+	DEFAULT_MODEL,
 	PROVIDER_NAME,
 	packageVersion,
 	SUPPORTED_FORMATS,
-	SUPPORTED_MODELS,
+	SUPPORTED_MODEL,
 	SUPPORTED_PROVIDERS,
 	TOOL_NAME,
 } from "./constants";
@@ -28,9 +28,9 @@ const CliOptionsSchema = z.object({
 		message: `--provider must be one of: ${SUPPORTED_PROVIDERS.join(", ")}`,
 	}),
 	model: z
-		.enum(Object.values(SUPPORTED_MODELS).flat(), {
+		.enum(Object.values(SUPPORTED_MODEL).flat(), {
 			// TODO: too many models, just show a brief list of models
-			message: `--model must be one of: ${Object.values(SUPPORTED_MODELS).flat().join(", ")}`,
+			message: `--model must be one of: ${Object.values(SUPPORTED_MODEL).flat().join(", ")}`,
 		})
 		.optional(),
 });
@@ -57,7 +57,7 @@ program
 	.option(
 		"--model <model>",
 		// TODO: too many models, just show a brief list of models
-		`AI model to use for generation (${Object.values(SUPPORTED_MODELS).flat().join(", ")})`,
+		`AI model to use for generation (${Object.values(SUPPORTED_MODEL).flat().join(", ")})`,
 	)
 	.argument("<file>", "context file to convert")
 	.action(
@@ -75,7 +75,7 @@ program
 			}
 
 			const { from, to, provider, model } = validationResult.data;
-			const modelId = model ?? DEFAULT_MODELS[provider];
+			const modelId = model ?? DEFAULT_MODEL[provider];
 			const filePath = resolve(file);
 
 			try {
