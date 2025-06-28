@@ -18,6 +18,7 @@ This is x-context, a CLI tool that converts AI coding tool context files between
 - **Test CLI**: `npx tsx src/index.ts --from claude-code --to cursor --provider openai ./CLAUDE.md`
 - **Test Built CLI**: `node dist/index.js --from claude-code --to cursor --provider openai ./CLAUDE.md`
 - **Test with Model**: `npx tsx src/index.ts --from claude-code --to cursor --model o3 ./CLAUDE.md`
+- **Test Multiple Files**: `npx tsx src/index.ts --from claude-code --to cursor --provider openai ./CLAUDE.md ./README.md`
 
 ## Architecture
 

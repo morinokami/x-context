@@ -8,20 +8,23 @@ TODO: Convert AI coding tool context files between different formats.
 You don't need to install anything, just run `npx` or `pnpm dlx` to use `x-context`:
 
 ```sh
-npx x-context@latest [options] <file>
+npx x-context@latest [options] <files...>
 ```
 
 Specify the source (`--from`) and target (`--to`) tools, AI provider (`--provider`), and optionally a model (`--model`):
 
 ```sh
 # Convert CLAUDE.md to Cursor rules using Anthropic model
-npx x-context --from claude-code --to cursor --provider anthropic ./CLAUDE.md
+npx x-context --from claude-code --to cursor --provider anthropic CLAUDE.md
 
 # Convert Copilot instructions to Gemini CLI context file using Gemini model
 npx x-context --from copilot --to gemini-cli --provider gemini .github/copilot-instructions.md
 
-# Use specific model (o3)
-npx x-context --from claude-code --to gemini-cli --model o3 ./CLAUDE.md
+# Use specific model (OpenAI o3)
+npx x-context --from claude-code --to gemini-cli --model o3 CLAUDE.md
+
+# Convert multiple files at once (useful when a context file references other files)
+npx x-context --from claude-code --to cursor --provider anthropic CLAUDE.md README.md docs/git-instructions.md
 ```
 
 
