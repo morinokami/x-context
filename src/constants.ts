@@ -12,6 +12,7 @@ export const packageVersion = packageJson.version;
 // TODO: support more formats and providers
 export const SUPPORTED_FORMATS = [
 	"claude-code",
+	"codex",
 	"copilot",
 	"cursor",
 	"gemini-cli",
@@ -122,6 +123,7 @@ export type SupportedOpenAIModel = (typeof SUPPORTED_MODEL.openai)[number];
 
 export const TOOL_NAME: Record<SupportedFormat, string> = {
 	"claude-code": "Claude Code",
+	codex: "OpenAI Codex",
 	copilot: "GitHub Copilot",
 	cursor: "Cursor",
 	"gemini-cli": "Gemini CLI",
@@ -132,8 +134,11 @@ export const PROVIDER_NAME: Record<SupportedProvider, string> = {
 	openai: "OpenAI",
 } as const;
 
-export const DOC_URL = {
+export const DOC_URL: Record<SupportedFormat, string[]> = {
 	"claude-code": ["https://docs.anthropic.com/en/docs/claude-code/memory.md"],
+	codex: [
+		"https://raw.githubusercontent.com/openai/codex/refs/heads/main/README.md",
+	],
 	copilot: [
 		// TODO: should be https://docs.github.com/en/copilot/how-tos/custom-instructions/adding-repository-custom-instructions-for-github-copilot?tool=vscode
 		"https://raw.githubusercontent.com/github/docs/refs/heads/main/content/copilot/how-tos/custom-instructions/adding-personal-custom-instructions-for-github-copilot.md",

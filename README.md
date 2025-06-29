@@ -39,8 +39,9 @@ npx x-context --from claude-code --to cursor --provider anthropic CLAUDE.md READ
 
 | Tool | Value |
 | --- | --- |
-| GitHub Copilot | `copilot` |
 | Claude Code | `claude-code` |
+| OpenAI Codex | `codex` |
+| GitHub Copilot | `copilot` |
 | Cursor | `cursor` |
 | Gemini CLI | `gemini-cli` |
 

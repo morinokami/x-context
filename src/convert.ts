@@ -73,6 +73,7 @@ Core responsibilities:
 
 FILE NAMING GUIDELINES:
 - For claude-code target format: Use CLAUDE.md for project memory (located in project root)
+- For codex target format: Use AGENTS.md for custom instructions (located in project root, merged with global ~/.codex/AGENTS.md)
 - For cursor target format: Use .mdc files within .cursor/rules/ directory structure (flexible naming within this structure)
 - For copilot target format: Use .github/copilot-instructions.md in repository root for repository custom instructions
 - For gemini-cli target format: Use GEMINI.md (default context filename, configurable via contextFileName setting)
