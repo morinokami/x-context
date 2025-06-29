@@ -11,8 +11,8 @@ export const packageVersion = packageJson.version;
 
 // TODO: support more formats and providers
 export const SUPPORTED_FORMATS = [
-	"copilot",
 	"claude-code",
+	"copilot",
 	"cursor",
 	"gemini-cli",
 ] as const;
@@ -121,8 +121,8 @@ export type SupportedGeminiModel = (typeof SUPPORTED_MODEL.gemini)[number];
 export type SupportedOpenAIModel = (typeof SUPPORTED_MODEL.openai)[number];
 
 export const TOOL_NAME: Record<SupportedFormat, string> = {
-	copilot: "GitHub Copilot",
 	"claude-code": "Claude Code",
+	copilot: "GitHub Copilot",
 	cursor: "Cursor",
 	"gemini-cli": "Gemini CLI",
 } as const;
@@ -133,10 +133,11 @@ export const PROVIDER_NAME: Record<SupportedProvider, string> = {
 } as const;
 
 export const DOC_URL = {
+	"claude-code": ["https://docs.anthropic.com/en/docs/claude-code/memory.md"],
 	copilot: [
+		// TODO: should be https://docs.github.com/en/copilot/how-tos/custom-instructions/adding-repository-custom-instructions-for-github-copilot?tool=vscode
 		"https://raw.githubusercontent.com/github/docs/refs/heads/main/content/copilot/how-tos/custom-instructions/adding-personal-custom-instructions-for-github-copilot.md",
 	],
-	"claude-code": ["https://docs.anthropic.com/en/docs/claude-code/memory.md"],
 	cursor: ["https://docs.cursor.com/context/rules.md"],
 	"gemini-cli": [
 		"https://raw.githubusercontent.com/google-gemini/gemini-cli/refs/heads/main/docs/cli/configuration.md",

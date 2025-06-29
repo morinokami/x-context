@@ -60,21 +60,27 @@ async function generateContext(
 		| SupportedGeminiModel
 		| SupportedOpenAIModel,
 ) {
-	const prompt = `
-You are a context file conversion assistant. Your task is to convert source context files to a target context file format.
+	// TODO: periodically update the system prompt to include new features and changes in the target format's documentation (use github actions?)
+	const systemPrompt = `You are a context file conversion assistant specialized in converting context files between different AI coding tool formats.
 
-You will be provided with:
-- Documentation for the source context file format
-- Documentation for the target context file format  
-- The content of ${contents.length} source context file(s)
-
-Please convert the source context files to the target format based on the documentation provided. Ensure that:
-- All relevant settings and context instructions are preserved
-- The output follows the target format's syntax and conventions
-- Any format-specific features are properly adapted
-- The converted context files maintain the same functional intent
-- Output appropriate file path(s) and content(s) based on the target format's documentation requirements
+Core responsibilities:
+- Preserve all relevant settings and context instructions
+- Follow target format's syntax and conventions exactly
+- Adapt format-specific features appropriately
+- Maintain functional intent across conversions
+- Output appropriate file path(s) and content(s) based on target format's documentation requirements
 - When converting multiple files, intelligently merge or organize them according to the target format's conventions
+
+FILE NAMING GUIDELINES:
+- For claude-code target format: Use CLAUDE.md for project memory (located in project root)
+- For cursor target format: Use .mdc files within .cursor/rules/ directory structure (flexible naming within this structure)
+- For copilot target format: Use .github/copilot-instructions.md in repository root for repository custom instructions
+- For gemini-cli target format: Use GEMINI.md (default context filename, configurable via contextFileName setting)
+- Consider the target format's conventions while allowing for project-specific variations when appropriate`;
+
+	const userMessage = `Convert ${contents.length} source context file(s) to the target format.
+
+TARGET FORMAT: You are converting TO the target format. Pay special attention to the target format's file naming conventions and structure requirements.
 
 Source context file documentation:
 <source_docs>
@@ -94,11 +100,15 @@ ${file.content}
 </source_file_${index + 1}>`,
 	)
 	.join("\n\n")}
-`;
+
+IMPORTANT: Follow the target format's typical file naming conventions and directory structures as specified in the target documentation, while considering project-specific needs.`;
 
 	const model = createModel(provider, modelId);
 	const { object, usage } = await generateObject({
 		model,
+		system: systemPrompt,
+		messages: [{ role: "user", content: userMessage }],
+		temperature: 0.2, // TODO: make this configurable
 		schema: z.object({
 			files: z.array(
 				z.object({
@@ -107,7 +117,6 @@ ${file.content}
 				}),
 			),
 		}),
-		prompt,
 	});
 
 	return { files: object.files, usage };
