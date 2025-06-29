@@ -2,11 +2,20 @@
 	"name": "x-context",
 	"version": "0.0.1",
 	"description": "AI-powered CLI command that converts AI coding tool context files between different formats",
-	"keywords": [],
+	"keywords": [
+		"ai"
+  ],
 	"author": "Shinya Fujino <shf0811@gmail.com> (https://github.com/morinokami)",
 	"license": "MIT",
 	"packageManager": "pnpm@10.12.3",
 	"type": "module",
+  "repository": {
+		"type": "git",
+		"url": "https://github.com/morinokami/x-context"
+	},
+	"bugs": {
+		"url": "https://github.com/morinokami/x-context/issues"
+	},
 	"bin": {
 		"x-context": "./dist/index.js"
 	},
