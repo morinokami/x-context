@@ -48,15 +48,17 @@ This is x-context, a CLI tool that converts AI coding tool context files between
 
 ### CLI Flow
 1. **Validation**: Zod schemas validate CLI arguments (--from, --to, --provider, optional --model)
-2. **Model Selection**: Uses default models (claude-4-sonnet-20250514 for Anthropic, gemini-2.5-flash-preview-04-17 for Gemini, o4-mini for OpenAI) if --model not specified
-3. **Documentation Fetching**: Downloads format documentation with progress feedback
-4. **AI Conversion**: Sends comprehensive prompt to AI with structured output schema
-5. **User Confirmation**: Shows file paths and asks for confirmation before writing
-6. **File Output**: Creates directories if needed and writes converted files with paths determined by AI response
+2. **Format Check**: Prevents conversion when source and target formats are identical
+3. **Model Selection**: Uses default models (claude-4-sonnet-20250514 for Anthropic, gemini-2.5-flash-preview-04-17 for Gemini, o4-mini for OpenAI) if --model not specified
+4. **Documentation Fetching**: Downloads format documentation with progress feedback
+5. **AI Conversion**: Sends comprehensive prompt to AI with structured output schema and format-specific naming guidelines
+6. **User Confirmation**: Shows file paths and asks for confirmation before writing
+7. **File Output**: Creates directories if needed and writes converted files with paths determined by AI response
 
 ### Conversion System
 - **Documentation URLs**: Live documentation fetched for accurate, up-to-date conversions
 - **Structured Output**: AI returns `{files: [{path: string, content: string}]}` validated by Zod
+- **Format-Specific Guidelines**: System prompt includes specific file naming conventions for each target format (CLAUDE.md for claude-code, .github/copilot-instructions.md for copilot, .mdc files in .cursor/rules/ for cursor, GEMINI.md for gemini-cli)
 - **Model Routing**: Defaults to claude-4-sonnet-20250514 for Anthropic, gemini-2.5-flash-preview-04-17 for Gemini, and o4-mini for OpenAI when --model not specified
 - **Error Handling**: Comprehensive error handling with user-friendly messages and spinner feedback
 - **Directory Handling**: Automatically creates parent directories when writing files with nested paths

@@ -95,6 +95,13 @@ program
 				model: specifiedModel,
 			} = validationResult.data;
 
+			if (from === to) {
+				console.error(
+					`Error: Source and target formats are the same (${from}). No conversion needed`,
+				);
+				process.exit(1);
+			}
+
 			// Determine the actual provider and model to use
 			let provider: SupportedProvider;
 			let modelId:
