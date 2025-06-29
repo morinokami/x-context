@@ -2,6 +2,9 @@
 
 x-context is an AI-powered CLI command that converts AI coding tool context files between different formats.
 
+> [!IMPORTANT]
+> This package is experimental and should be used with caution. The AI-powered conversion may not always produce perfect results, and you should review the generated files before using them.
+
 The proliferation of AI coding tools like [Claude Code](https://www.anthropic.com/claude-code), [OpenAI Codex](https://openai.com/codex/), [Gemini CLI](https://github.com/google-gemini/gemini-cli), etc. presents a common challenge: each tool uses different context file formats, making migration and tool switching cumbersome. Facing this challenge, I found myself wishing for a [Pandoc](https://pandoc.org/)-like command that could convert context files between different formats. This led me to build x-context, which enables seamless migration of AI tool context files and allows teams to maintain a single source of truth for project context while supporting multiple AI development tools.
 
 
