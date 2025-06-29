@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Overview
 
-This is x-context, a CLI tool that converts AI coding tool context files between different formats using AI-powered conversion. The tool helps users migrate context files between AI coding assistants (e.g., from Claude Code to Cursor) by leveraging the Vercel AI SDK's structured output capabilities.
+This is x-context, an AI-powered CLI tool that converts AI coding tool context files between different formats. The tool helps users migrate context files between AI coding assistants (e.g., from Claude Code to Cursor) by leveraging the Vercel AI SDK's structured output capabilities.
 
 **Supported Formats**: copilot, claude-code, cursor, gemini-cli
 **Supported Providers**: anthropic, gemini, openai
@@ -31,7 +31,7 @@ This is x-context, a CLI tool that converts AI coding tool context files between
 
 ### AI Integration Architecture
 - **Vercel AI SDK**: Uses `generateObject()` with unified interface for multiple providers
-- **Multi-Provider Support**: Seamless switching between Anthropic and OpenAI with same API
+- **Multi-Provider Support**: Seamless switching between Anthropic, Gemini, and OpenAI with same API
 - **Documentation System**: Automatically fetches format-specific documentation from live URLs
 - **Prompt Engineering**: Comprehensive system prompt that includes source/target docs and conversion requirements
 - **Structured Output**: Zod schemas ensure type-safe AI responses
@@ -47,7 +47,7 @@ This is x-context, a CLI tool that converts AI coding tool context files between
 ## Key Implementation Details
 
 ### CLI Flow
-1. **Validation**: Zod schemas validate CLI arguments (--from, --to, --provider, optional --model)
+1. **Validation**: Zod schemas validate CLI arguments (--from, --to, either --provider or --model required)
 2. **Format Check**: Prevents conversion when source and target formats are identical
 3. **Model Selection**: Uses default models (claude-4-sonnet-20250514 for Anthropic, gemini-2.5-flash-preview-04-17 for Gemini, o4-mini for OpenAI) if --model not specified
 4. **Documentation Fetching**: Downloads format documentation with progress feedback
