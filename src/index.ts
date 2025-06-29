@@ -95,7 +95,6 @@ program
 				model: specifiedModel,
 			} = validationResult.data;
 
-			// Check if from and to formats are the same
 			if (from === to) {
 				console.error(
 					`Error: Source and target formats are the same (${from}). No conversion needed`,
