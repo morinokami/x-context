@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is x-context, an AI-powered CLI tool that converts AI coding tool context files between different formats. The tool helps users migrate context files between AI coding assistants (e.g., from Claude Code to Cursor) by leveraging the Vercel AI SDK's structured output capabilities.
 
-**Supported Formats**: copilot, claude-code, cursor, gemini-cli
+**Supported Formats**: claude-code, codex, copilot, cursor, gemini-cli
 **Supported Providers**: anthropic, gemini, openai
 
 ## Development Commands
@@ -58,7 +58,7 @@ This is x-context, an AI-powered CLI tool that converts AI coding tool context f
 ### Conversion System
 - **Documentation URLs**: Live documentation fetched for accurate, up-to-date conversions
 - **Structured Output**: AI returns `{files: [{path: string, content: string}]}` validated by Zod
-- **Format-Specific Guidelines**: System prompt includes specific file naming conventions for each target format (CLAUDE.md for claude-code, .github/copilot-instructions.md for copilot, .mdc files in .cursor/rules/ for cursor, GEMINI.md for gemini-cli)
+- **Format-Specific Guidelines**: System prompt includes specific file naming conventions for each target format (CLAUDE.md for claude-code, AGENTS.md for codex, .github/copilot-instructions.md for copilot, .mdc files in .cursor/rules/ for cursor, GEMINI.md for gemini-cli)
 - **Model Routing**: Defaults to claude-4-sonnet-20250514 for Anthropic, gemini-2.5-flash-preview-04-17 for Gemini, and o4-mini for OpenAI when --model not specified
 - **Error Handling**: Comprehensive error handling with user-friendly messages and spinner feedback
 - **Directory Handling**: Automatically creates parent directories when writing files with nested paths
