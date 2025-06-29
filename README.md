@@ -1,6 +1,8 @@
 # x-context
 
-TODO: Convert AI coding tool context files between different formats.
+x-context is an AI-powered CLI command that converts AI coding tool context files between different formats.
+
+The proliferation of AI coding tools like [Claude Code](https://www.anthropic.com/claude-code), [OpenAI Codex](https://openai.com/codex/), [Gemini CLI](https://github.com/google-gemini/gemini-cli), etc. presents a common challenge: each tool uses different context file formats, making migration and tool switching cumbersome. Facing this challenge, I found myself wishing for a [Pandoc](https://pandoc.org/)-like command that could convert context files between different formats. This led me to build x-context, which enables seamless migration of AI tool context files and allows teams to maintain a single source of truth for project context while supporting multiple AI development tools.
 
 
 ## Usage
@@ -11,7 +13,7 @@ You don't need to install anything, just run `npx` or `pnpm dlx` to use `x-conte
 npx x-context@latest [options] <files...>
 ```
 
-TODO: Specify the source (`--from`) and target (`--to`) tools, AI provider (`--provider`), and optionally a model (`--model`):
+Specify the source (`--from`) and target (`--to`) tools, and either an AI provider (`--provider`) or a specific model (`--model`):
 
 ```sh
 # Convert CLAUDE.md to Cursor rules using Anthropic model
@@ -26,6 +28,8 @@ npx x-context --from claude-code --to gemini-cli --model gpt-4o CLAUDE.md
 # Convert multiple files at once (useful when a context file references other files)
 npx x-context --from claude-code --to cursor --provider anthropic CLAUDE.md README.md docs/git-instructions.md
 ```
+
+**Note**: You need to set the appropriate environment variable for your chosen AI provider. See the [Supported Providers](#supported-providers) section for details on required API keys.
 
 
 ## Supported Tools
@@ -48,6 +52,8 @@ npx x-context --from claude-code --to cursor --provider anthropic CLAUDE.md READ
 
 
 ## Supported Models
+
+The following model IDs are sourced from Vercel's [AI SDK](https://ai-sdk.dev/):
 
 ### Anthropic
 
